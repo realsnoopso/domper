@@ -1,0 +1,28 @@
+{
+  "name": "domper",
+  "version": "0.0.1",
+  "description": "Your new companion for effortless and efficient DOM manipulation.",
+  "type": "module",
+  "main": "index.cjs",
+  "module": "index.esm.js",
+  "exports": {
+    ".": {
+      "require": "./index.cjs",
+      "import": "./index.esm.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "dom",
+    "helper",
+    "custom elements",
+    "web elements",
+    "html",
+    "query",
+    "selector"
+  ],
+  "author": "",
+  "license": "ISC"
+}
