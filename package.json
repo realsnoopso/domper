@@ -1,6 +1,6 @@
 {
   "name": "domper",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Your new companion for effortless and efficient DOM manipulation.",
   "type": "module",
   "main": "index.cjs",
@@ -10,6 +10,13 @@
       "require": "./index.cjs",
       "import": "./index.esm.js"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/realsnoopso/domper"
+  },
+  "bugs": {
+    "url": "https://github.com/realsnoopso/domper/issues"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,6 +30,6 @@
     "query",
     "selector"
   ],
-  "author": "",
-  "license": "ISC"
+  "author": "realsnoopso",
+  "license": "MIT"
 }
