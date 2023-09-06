@@ -1,6 +1,6 @@
 {
   "name": "domper",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Effortless and efficient DOM manipulation",
   "type": "module",
   "main": "index.cjs",
