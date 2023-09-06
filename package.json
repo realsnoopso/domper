@@ -4,11 +4,11 @@
   "description": "Your new companion for effortless and efficient DOM manipulation.",
   "type": "module",
   "main": "index.cjs",
-  "module": "index.esm.js",
+  "module": "index.mjs",
   "exports": {
     ".": {
-      "require": "./index.cjs",
-      "import": "./index.esm.js"
+      "require": "./src/index.cjs",
+      "import": "./src/index.mjs"
     }
   },
   "repository": {

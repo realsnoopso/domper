@@ -1,25 +1,23 @@
-import {
+const {
   create,
   select,
   selectAll,
   getProperty,
   setProperty,
   insertTemplate,
-  addShadow,
   addStyle,
   toggleClass,
   addClass,
   removeClass,
-} from './src/dom.js';
+} = require('./dom.js');
 
-export {
+module.exports = {
   create,
   select,
   selectAll,
   getProperty,
   setProperty,
   insertTemplate,
-  addShadow,
   addStyle,
   toggleClass,
   addClass,
