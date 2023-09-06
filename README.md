@@ -2,7 +2,7 @@
 
 Introducing Domper, your new companion for effortless and efficient DOM manipulation.
 
-Domper is a lightweight and powerful JavaScript library designed to streamline the process of working with the Document Object Model (DOM). This library provides a set of utility functions, including methods for creating, selecting, and modifying elements, setting and retrieving attributes, and working with Shadow DOM.
+Domper is a lightweight JavaScript library designed to streamline the process of working with the Document Object Model (DOM). This library provides a set of utility functions, including methods for creating, selecting, and modifying elements, setting and retrieving attributes, and working with Shadow DOM.
 
 With Domper, you can:
 
@@ -14,7 +14,6 @@ With Domper, you can:
 - Effortlessly add styles with addStyle.
 - Dynamically toggle, add, and remove classes for your elements.
 
-Domper empowers developers to manage their DOM operations in a more intuitive and concise manner. Start using Domper today and experience the magic of easy DOM manipulation.
 
 # Installation
 
@@ -25,6 +24,7 @@ npm install domper
 ```
 
 or
+
 ```
 yarn add domper
 ```
@@ -111,8 +111,7 @@ const dataObject = getProperty({
 
 You can set the value of an attribute of an element using the setProperty function:
 
-```ts
-Copy code
+```js
 import { setProperty } from 'dom-manipulator';
 
 setProperty({
@@ -124,7 +123,7 @@ setProperty({
 
 When setting an attribute using `setProperty` function, if you specify `type` as `object`, it will automatically convert the value to a JSON string:
 
-```ts
+```js
 import { setProperty } from 'dom-manipulator';
 
 setProperty({
@@ -141,7 +140,7 @@ setProperty({
 
 The `select` function can be used to select a single element. If you pass an array of selectors, it will select the last one in the array:
 
-```ts
+```js
 import { select } from 'dom-manipulator';
 
 // Select a single element by id
@@ -155,7 +154,7 @@ const innerElement = select({ selector: ['#myElement', '#innerElement'] });
 
 The `selectAll` function can be used to select multiple elements that match the final selector in the provided array. It returns a NodeList of all matching elements:
 
-```ts
+```js
 import { selectAll } from 'dom-manipulator';
 
 // Select all elements with class 'myClass'
@@ -169,7 +168,7 @@ const innerElements = selectAll({ selector: ['#myElement', '.innerClass'] });
 
 You can add HTML content to an element using the `add` function:
 
-```ts
+```js
 import { add } from 'dom-manipulator';
 
 add({
@@ -180,7 +179,7 @@ add({
 
 You can also add an HTML template to a shadow DOM using the `add` function:
 
-```ts
+```js
 import { addShadow, add } from 'dom-manipulator';
 
 // Add a shadow root to an element
@@ -197,7 +196,7 @@ add({
 
 You can add a shadow root to an element using the `addShadow` function:
 
-```ts
+```js
 import { addShadow } from 'dom-manipulator';
 
 addShadow({
@@ -209,7 +208,7 @@ addShadow({
 
 You can add a style element to an element (or a shadow root) using the `addStyle` function:
 
-```ts
+```js
 import { addStyle } from 'dom-manipulator';
 
 const style = document.createElement('style');
@@ -224,7 +223,7 @@ addStyle({
 
 You can toggle, add, or remove a class from an element using the `toggleClass`, `addClass`, and `removeClass` functions, respectively:
 
-```ts
+```js
 import { toggleClass, addClass, removeClass } from 'dom-manipulator';
 
 toggleClass({
