@@ -9,7 +9,9 @@ import {
   toggleClass,
   addClass,
   removeClass,
-} from './dom.js';
+} from './dom.mjs';
+
+import { defineElement } from './element.mjs';
 
 export {
   create,
@@ -22,4 +24,5 @@ export {
   toggleClass,
   addClass,
   removeClass,
+  defineElement,
 };

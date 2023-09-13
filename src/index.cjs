@@ -9,7 +9,9 @@ const {
   toggleClass,
   addClass,
   removeClass,
-} = require('./dom.js');
+} = require('./dom.mjs');
+
+const { defineElement } = require('./element.mjs');
 
 module.exports = {
   create,
@@ -22,4 +24,5 @@ module.exports = {
   toggleClass,
   addClass,
   removeClass,
+  defineElement,
 };

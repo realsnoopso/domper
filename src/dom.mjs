@@ -22,6 +22,10 @@ export const create = (tag, options) => {
     });
   }
 
+  if (options?.template) {
+    element.innerHTML = options.template;
+  }
+
   if (options?.text) {
     element.innerText = options.text;
   }
@@ -33,19 +37,28 @@ export const create = (tag, options) => {
   }
 
   if (options?.to) {
-    options.to.append(element);
+    if (options.to.shadowRoot) {
+      options.to.shadowRoot.append(element);
+    } else {
+      options.to.append(element);
+    }
+  }
+
+  if (options?.state) {
+    element.setState(options.state);
   }
 
   return element;
 };
 
-export const runSelect = (isSelectAll, selector, options) => {
+export const runSelect = (isSelectAll, parent, selector) => {
   const getSelectMethod = (target) => {
     const hasShadowRoot = target?.shadowRoot;
     target = hasShadowRoot ? target.shadowRoot : target;
     if (target instanceof NodeList) {
       target = target[0];
     }
+
     return isSelectAll
       ? target.querySelectorAll.bind(target)
       : target.querySelector.bind(target);
@@ -55,11 +68,11 @@ export const runSelect = (isSelectAll, selector, options) => {
     const isLastElement = i === selector.length - 1;
     const isFirstElement = i === 0;
     if (isLastElement) {
-      const target = pre ?? options?.parent ?? document;
+      const target = pre ?? parent ?? document.body;
       return getSelectMethod(target)(curr);
     }
     if (isFirstElement) {
-      const target = options?.parent ?? document;
+      const target = parent ?? document;
       return getSelectMethod(target)(curr);
     }
     const target = pre;
@@ -67,12 +80,12 @@ export const runSelect = (isSelectAll, selector, options) => {
   }, null);
 };
 
-export const select = (selector, options) => {
-  return runSelect(false, selector, options);
+export const select = (parent, selector) => {
+  return runSelect(false, parent, selector);
 };
 
-export const selectAll = (selector, options) => {
-  return runSelect(true, selector, options);
+export const selectAll = (parent, selector) => {
+  return runSelect(true, parent, selector);
 };
 
 export const getProperty = (target, key, type = 'string') => {
@@ -90,11 +103,14 @@ export const getProperty = (target, key, type = 'string') => {
   return value;
 };
 
-export const setProperty = ({ target, name, value, type = 'string' }) => {
-  if (type === 'object') {
-    return target?.setAttribute(name, JSON.stringify(value));
-  }
-  return target?.setAttribute(name, `${value}`);
+export const setProperty = (target, properties, type = 'string') => {
+  Object.entries(properties).forEach((property) => {
+    const [key, value] = property;
+    if (type === 'object') {
+      return target?.setAttribute(key, JSON.stringify(value));
+    }
+    return target?.setAttribute(key, `${value}`);
+  });
 };
 
 export const insertTemplate = (template, to) => {
@@ -121,13 +137,4 @@ export const addClass = (target, className) => {
 export const removeClass = (target, className) => {
   if (!target || !className) return;
   if (target.classList.contains(className)) target.classList.remove(className);
-};
-
-export default {
-  create,
-  select,
-  getProperty,
-  insertTemplate,
-  addStyle,
-  toggleClass,
 };
