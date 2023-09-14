@@ -1,63 +1,110 @@
 # Domper
 
-Introducing Domper, your new companion for effortless and efficient DOM manipulation.
+Introducing Domper, your new companion for effortless and efficient DOM manipulation and Web Components creation.
 
-Domper is a lightweight JavaScript library designed to streamline the process of working with the Document Object Model (DOM). This library provides a set of utility functions, including methods for creating, selecting, and modifying elements, setting and retrieving attributes, and working with Shadow DOM.
+## Features
 
-With Domper, you can:
+- **Effortless DOM Manipulation**: Create, select, and modify DOM elements with a simple API.
+- **Web Components**: Quickly define and manage custom elements with `defineElement`.
+  
+## Installation
 
-- Easily create and wrap DOM elements with specific attributes and text content.
-- Select single or multiple elements based on your selector queries, even with Shadow DOM.
-- Get and set properties of your selected elements with precision, supporting different data types.
-- Insert HTML templates with the add function.
-- Seamlessly add a Shadow DOM to your elements with addShadow.
-- Effortlessly add styles with addStyle.
-- Dynamically toggle, add, and remove classes for your elements.
-
-
-# Installation
-
-You can install the library using npm:
-
-```
+```bash
 npm install domper
 ```
 
 or
 
-```
+```bash
 yarn add domper
 ```
 
-# Usage
+## Basic Usage
 
-## Import the Library
+### Import the Library
 
-You can import the entire library or individual functions as needed. Here are two ways to import:
-
-```ts
+```js
 // Import the entire library
-import * as DOMManipulator from 'dom-manipulator';
+import * as Domper from 'domper';
 
 // Or import individual functions
-import { create, select, add } from 'dom-manipulator';
+import { defineElement, create } from 'domper';
 ```
 
-## Create an Element
+### Define a Custom Element with `defineElement`
 
-With `create` function, you can easily and efficiently generate DOM elements with various configurations:
+Easily create Web Components using the `defineElement` function.
 
-```ts
-import { create } from 'dom-manipulator';
+#### Example
 
-const div = create({
-  tagName: 'div',
-  classList: ['myClass1', 'myClass2'],
-  attributeList: [
-    ['id', 'myId'],
-    ['data-test', 'testValue'],
-  ],
-  text: 'Hello, world!',
+```js
+import { defineElement } from 'domper';
+
+defineElement('my-element', ({ props }) => {
+  return `<div>${props.text}</div>`;
+}, {
+  style: '.my-element { color: red; }',
+  afterRender: () => { console.log('Component has been rendered'); }
+});
+```
+
+#### Parameters
+
+- `tagName` (String): The name of the custom element.
+- `componentFn` (Function): A function that returns the HTML template.
+
+#### Options
+
+- `style` (String): CSS styles.
+- `afterRender` (Function): A function called after the component is rendered.
+
+#### Usage
+
+```html
+<my-element data-props='{"text": "Hello, world!"}'></my-element>
+```
+
+### Accessing and Modifying `props` and `state`
+
+#### Get and Set `props`
+
+```js
+// Get current props
+const myElement = document.querySelector('my-element');
+const currentProps = JSON.parse(myElement.getAttribute('data-props'));
+
+// Set new props
+const newProps = { text: 'New text!' };
+myElement.setAttribute('data-props', JSON.stringify(newProps));
+```
+
+#### Get and Set `state` 
+
+State is managed internally and can be set using `setState` within the `componentFn`.
+
+```js
+defineElement('my-element', ({ state, setState }) => {
+  // Set new state
+  setState({ count: state.count + 1 });
+
+  // Your render logic
+  return `<div>${state.count}</div>`;
+});
+```
+
+### Create an Element (`create`)
+
+Create new DOM elements with optional configurations.
+
+#### Example
+
+```js
+import { create } from 'domper';
+
+const newDiv = create('div', {
+  classes: ['myClass1', 'myClass2'],
+  attributes: { id: 'myId', 'data-test': 'testValue' },
+  text: 'Hello, world!'
 });
 
 // This creates a new <div> element with:
@@ -67,181 +114,89 @@ const div = create({
 //  - Text content 'Hello, world!'
 ```
 
-## Get an Attribute
+#### Parameters
 
-You can get the value of an attribute from an element using the `getProperty` function:
+- `tag` (String): The tag name of the element.
+- `options` (Object): Optional configurations like classes, attributes, text, shadow root, and more.
 
-```ts
-import { getProperty } from 'dom-manipulator';
+### Select Element (`select` and `selectAll`)
 
-const id = getProperty({
-  target: element,
-  name: 'id',
-});
-```
+Select single or multiple elements based on your selector queries.
 
-Or you can retrieve attribute values from a DOM element and automatically convert them into different types based on your needs:
-
-```ts
-import { getProperty } from 'dom-manipulator';
-
-const dataNumber = getProperty({
-  target: element,
-  name: 'data-number',
-  type: 'number',
-});
-// 'dataNumber' is a number
-
-const dataBoolean = getProperty({
-  target: element,
-  name: 'data-boolean',
-  type: 'boolean',
-});
-// 'dataBoolean' is a boolean
-
-const dataObject = getProperty({
-  target: element,
-  name: 'data-object',
-  type: 'object',
-});
-// 'dataObject' is an object
-```
-
-## Set an Attribute
-
-You can set the value of an attribute of an element using the setProperty function:
+#### Example
 
 ```js
-import { setProperty } from 'dom-manipulator';
+import { select, selectAll } from 'domper';
 
-setProperty({
-  target: element,
-  name: 'id',
-  value: 'newId'
-});
+const myElement = select(document.body, ['#myElement']);
+const allElements = selectAll(document.body, ['.myClass']);
 ```
 
-When setting an attribute using `setProperty` function, if you specify `type` as `object`, it will automatically convert the value to a JSON string:
+#### Parameters
+
+- `parent` (HTMLElement | ShadowRoot): The parent element or shadow root to search within.
+- `selector` (Array): An array of selectors to be used for searching.
+
+### Get and Set Property (`getProperty` and `setProperty`)
+
+Retrieve and set properties of DOM elements, supporting different data types.
+
+#### Example
 
 ```js
-import { setProperty } from 'dom-manipulator';
+import { getProperty, setProperty } from 'domper';
 
-setProperty({
-  target: element,
-  name: 'data',
-  value: { key: 'value' },
-  type: 'object',
-});
+// Get a property
+const id = getProperty(element, 'id');
 
-// Now the 'data' attribute of the element contains '{"key":"value"}'
+// Set a property
+setProperty(element, { id: 'newId' });
 ```
 
-## Select an Element
+#### Parameters
 
-The `select` function can be used to select a single element. If you pass an array of selectors, it will select the last one in the array:
+- `target` (HTMLElement | ShadowRoot): Target element or shadow root.
+- `properties` (Object): An object containing key-value pairs for setting properties.
+- `type` (String): Optional type for value conversion (e.g., 'object', 'number').
+
+### Insert Template (`insertTemplate`)
+
+Insert an HTML template into a target element.
+
+#### Example
 
 ```js
-import { select } from 'dom-manipulator';
+import { insertTemplate } from 'domper';
 
-// Select a single element by id
-const myElement = select({ selector: ['#myElement'] });
-
-// If '#myElement' has a shadow DOM containing '#innerElement', the following will select '#innerElement'
-const innerElement = select({ selector: ['#myElement', '#innerElement'] });
+insertTemplate('<p>Hello, world!</p>', element);
 ```
 
-## Select Multiple Elements
+### Add Style (`addStyle`)
 
-The `selectAll` function can be used to select multiple elements that match the final selector in the provided array. It returns a NodeList of all matching elements:
+Add a style element to a target element.
+
+#### Example
 
 ```js
-import { selectAll } from 'dom-manipulator';
+import { addStyle } from 'domper';
 
-// Select all elements with class 'myClass'
-const myElements = selectAll({ selector: ['.myClass'] });
-
-// If '#myElement' has a shadow DOM containing elements with class 'innerClass', the following will select all '.innerClass' elements
-const innerElements = selectAll({ selector: ['#myElement', '.innerClass'] });
+addStyle('.myClass { color: red; }', element);
 ```
 
-## Add HTML to an Element
+### Toggle, Add, and Remove Classes (`toggleClass`, `addClass`, `removeClass`)
 
-You can add HTML content to an element using the `add` function:
+Toggle, add, or remove a class from an element.
 
-```js
-import { add } from 'dom-manipulator';
-
-add({
-  target: element,
-  template: '<p>Hello, World!</p>',
-});
-```
-
-You can also add an HTML template to a shadow DOM using the `add` function:
+#### Example
 
 ```js
-import { addShadow, add } from 'dom-manipulator';
+import { toggleClass, addClass, removeClass } from 'domper';
 
-// Add a shadow root to an element
-const shadowRoot = addShadow({ target: element });
-
-// Add an HTML template to the shadow root
-add({
-  target: shadowRoot,
-  template: '<p>Hello, Shadow DOM!</p>',
-});
-```
-
-## Add a Shadow Root to an Element
-
-You can add a shadow root to an element using the `addShadow` function:
-
-```js
-import { addShadow } from 'dom-manipulator';
-
-addShadow({
-  target: element,
-});
-```
-
-## Add a Style Element
-
-You can add a style element to an element (or a shadow root) using the `addStyle` function:
-
-```js
-import { addStyle } from 'dom-manipulator';
-
-const style = document.createElement('style');
-style.textContent = '.myClass { color: red; }';
-addStyle({
-  target: element,
-  style: style,
-});
-```
-
-## Toggle, Add, and Remove Classes
-
-You can toggle, add, or remove a class from an element using the `toggleClass`, `addClass`, and `removeClass` functions, respectively:
-
-```js
-import { toggleClass, addClass, removeClass } from 'dom-manipulator';
-
-toggleClass({
-  target: element,
-  className: 'myClass',
-});
-
-addClass({
-  target: element,
-  className: 'anotherClass',
-});
-
-removeClass({
-  target: element,
-  className: 'myClass',
-});
+toggleClass(element, 'myClass');
+addClass(element, 'anotherClass');
+removeClass(element, 'myClass');
 ```
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).

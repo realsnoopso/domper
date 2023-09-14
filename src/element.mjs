@@ -1,6 +1,7 @@
 import { addStyle, select } from './index.mjs';
+import { deepCopy } from './utils.mjs';
 
-export function defineElement(tagName, componentFn, { style, afterRender }) {
+export function defineElement(tagName, componentFn, options) {
   class FunctionalElement extends HTMLElement {
     constructor() {
       super();
@@ -14,7 +15,7 @@ export function defineElement(tagName, componentFn, { style, afterRender }) {
         this._props[attribute.name] = attribute.value;
       }
 
-      style && addStyle(style, this.shadowRoot);
+      options?.style && addStyle(options.style, this.shadowRoot);
       this.update();
     }
 
@@ -22,7 +23,7 @@ export function defineElement(tagName, componentFn, { style, afterRender }) {
       return ['data-props'];
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(name, _, newValue) {
       if (name === 'data-props') {
         try {
           this._props = JSON.parse(newValue);
@@ -40,7 +41,7 @@ export function defineElement(tagName, componentFn, { style, afterRender }) {
         setState: this.setState.bind(this),
       });
 
-      if (style) {
+      if (options?.style) {
         const styleElement = select(this.shadowRoot, ['style']);
 
         Array.from(this.shadowRoot.children).forEach((child) => {
@@ -53,15 +54,11 @@ export function defineElement(tagName, componentFn, { style, afterRender }) {
         this.shadowRoot.innerHTML = template;
       }
 
-      afterRender();
-    }
-
-    getState() {
-      return state;
+      if (options?.afterRender) options.afterRender();
     }
 
     setState(newState) {
-      this._state = { ...this._state, ...newState };
+      this._state = { ...this._state, ...deepCopy(newState) };
       this.update();
     }
   }
